@@ -1,0 +1,142 @@
+$singleColumnPixWidth: 800px;
+
+body{
+    padding:0% 5% 0% 5%;
+}
+
+.infoBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+#criteraBlock{
+    padding: 5px 5px 5px 10px;
+}
+#alternativesBlock{
+    padding: 5px 10px 5px 5px;
+}
+
+
+/* things to do when we want to do a single column layout*/
+@media only screen and (min-width: $singleColumnPixWidth) {
+    #criteraBlock{
+        flex: 50%;
+    }
+    #alternativesBlock{
+        flex: 50%;
+    }
+    .infoBlock{
+    flex-direction: row;
+    }
+}
+
+ul
+{
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.alternativeListItem,
+.criteriaListItem{
+    border: solid 1px;
+    border-color: #dddddd;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    display: flex;
+    flex-direction: row;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 10px;
+}
+
+.liLeft{
+    flex-grow: 1;
+}
+
+p.description{
+    width: 30em;
+    word-wrap: break-word;
+    padding: 5px 10px 5px 10px;
+}
+
+.name{
+    font-size: 110%;
+    text-decoration: underline;
+}
+
+.liRight{
+    display: flex;
+    align-items: center;
+}
+.blockHeader{
+    text-align: center;
+}
+
+.error{
+    color: #a94442;
+    background-color: #f2dede;
+}
+
+.errorMessage{
+    /*
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    */
+    color: #a94442;
+    background-color: #f2dede;
+    padding: .5em 2em .5em 2em;
+    margin-bottom: .5em;
+}
+.carouselContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.myCarousel{
+    display: flex;
+        align-items: center;
+    justify-content: center;
+    width: 90vw;
+    padding: 1vh 3.5vw 2vh 3.5vw;
+    box-shadow:         inset 0 0 5px #000000;
+}
+
+.carouselItem{
+    width: 100%;
+    height: 33vh;
+}
+
+.carousel-inner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.myResponsiveContainer{
+    padding-bottom: 10vh;
+}
+
+.chartTitle{
+    margin: 0 0 0 0;
+}
+
+.chart{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.myBarChart{
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-control{
+    width: 10%;
+}

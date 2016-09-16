@@ -1,0 +1,9 @@
+$formSpacing: 20px;
+$labelSpace: 5px;
+
+.form-group{
+    margin-right: $formSpacing;
+}
+ControlLabel{
+    margin-right: $labelSpace;
+}

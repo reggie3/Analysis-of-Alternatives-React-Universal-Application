@@ -1,8 +1,10 @@
-#React universal app template
+#Analysis of Alternatives React universal app 
 
-### Based on github repo here: 
+### Built from template here:
+[https://github.com/reggie3/React-Universal-App-Template]
+
+### Which was based on github repo here: 
 https://github.com/reactjs/react-router-tutorial/tree/master/lessons/01-setting-up
-
 
 Includes webpack dev server for development builds and express server for production.
 Both production and develpment builds serve client and server code.
