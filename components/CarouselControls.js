@@ -21,12 +21,6 @@ class CarouselControls extends Component {
     render() {
         return (
             <Navbar inverse>
-                <Navbar.Header>
-                    <Navbar.Brand>
-                        <a href="#">Graphs</a>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>{
                         this.props.graphNames.map((graphName, index) => {

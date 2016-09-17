@@ -1,0 +1,19 @@
+import React from 'react';
+import {Router, Route, browserHistory, IndexRoute } from 'react-router';
+import { render } from 'react-dom';
+import store from './client/client';
+import routes from './modules/routes';
+
+// connect store to components that need to know about it
+// Provider wraps around app and gets the store that is pasted to it as a prop
+import { Provider } from 'react-redux';
+
+
+render(
+    <Provider store ={store}>
+        <Router
+            routes={routes}
+            history={browserHistory}/>
+    </Provider>,
+    document.getElementById('app')
+)

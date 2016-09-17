@@ -5,7 +5,7 @@ var DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
   devtool: 'inline-source-map',
-  // entry: './index.js',
+  //entry: './index.js',
   entry: ['./client/client.js'],
   output: {
     path: 'public',

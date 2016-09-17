@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {Router, Route, browserHistory, IndexRoute } from 'react-router';
-import App from './../components/App';
+import App from './../pages/App';
 import configureStore from '../redux/store';
 import routes from '../modules/routes';
 import '../styles/master.scss'

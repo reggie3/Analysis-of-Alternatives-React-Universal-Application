@@ -15,7 +15,8 @@ export default function criteria(criteria = [], action) {
                 name: action.criterion.name,
                 description: action.criterion.description,
                 weight: action.criterion.weight,
-                id: getCriteriaId(criteria)
+                id: getCriteriaId(criteria),
+                useInvertedScoring: action.criterion.useInvertedScoring
             }
             updatedCriteria = criteria.concat(newCriteriaObject);
             updatedCriteria = _.orderBy(updatedCriteria, ['name'], ['asc']);

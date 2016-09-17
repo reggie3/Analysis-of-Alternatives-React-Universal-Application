@@ -7,7 +7,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --inline --content-base public/ --history-api-fallback",
     "start:prod": "npm run build && node server.bundle.js",
-    "debug":"npm run build && node-debug server.bundle.js",
+    "debug": "npm run build && node-debug server.bundle.js",
     "build:client": "webpack",
     "build:server": "webpack --config webpack.server.config.js",
     "build": "npm run build:client && npm run build:server"
@@ -15,9 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7",
-    "react-router": "^2.0.0",
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.2",
     "babel-polyfill": "^6.9.1",
@@ -31,13 +28,16 @@
     "jquery": "^3.1.0",
     "lodash": "^4.15.0",
     "rd3": "^0.7.1",
+    "react": "^0.14.7",
     "react-bootstrap": "^0.30.0-rc.2",
     "react-bootstrap-switch": "^15.0.0",
     "react-contenteditable": "^1.1.0",
+    "react-dom": "^0.14.7",
     "react-flexbox": "^3.1.1",
     "react-flexbox-grid": "^0.10.0",
     "react-number-picker": "^1.0.5",
     "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
     "react-widgets": "^3.4.3",
     "recharts": "^0.13.4",
     "reduce-reducers": "^0.1.2",
@@ -52,7 +52,6 @@
     "underscore.string": "^3.3.4",
     "validator": "^5.5.0"
   },
-  
   "devDependencies": {
     "http-server": "^0.8.5",
     "webpack-dev-server": "^1.14.1",

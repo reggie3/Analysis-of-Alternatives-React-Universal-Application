@@ -1,5 +1,6 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
+
 import reducer from "../reducers/reducer";
 // import promiseMiddleware from 'redux-promise-middleware';
 // import combineActionsMiddleware from 'redux-combine-actions';
@@ -10,11 +11,13 @@ const logger = createLogger();
 //const promise = promiseMiddleware();
 
 let finalCreateStore = compose(
-  applyMiddleware(thunk, logger)
+  applyMiddleware(thunk, logger),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+
 )(createStore);
 
 
-export default function configureStore(initialState = { criteria:[], alternatives:[] }) {
+export default function configureStore(initialState = { criteria: [], alternatives: [] }) {
   return finalCreateStore(reducer, initialState)
 }
 
