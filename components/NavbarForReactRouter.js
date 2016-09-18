@@ -1,6 +1,19 @@
 import React from 'react';
-import NavLink from '../components/NavLink'
+import { Link, IndexLink  } from 'react-router'
 
+// import NavbarLink from '../components/NavbarLink'
+
+
+let IndexNavbarLink = React.createClass({
+  render() {
+    return <IndexLink {...this.props} activeStyle={{ color: '#337Ab7' }}/>
+  }
+})
+let NavbarLink = React.createClass({
+  render() {
+    return <Link {...this.props} activeStyle={{ color: '#337Ab7' }}/>
+  }
+})
 
 /**
  * creates a navbar that use react router routes
@@ -16,19 +29,19 @@ export default React.createClass({
             {
                 this.props.links.map((link, index) => {
                     if (link.isHome)
-                        return <NavLink
-                            style = {Object.assign({}, link, homeLink) }
+                        return <IndexNavbarLink
+                            style = {Object.assign({}, normalLink, homeLink) }
                             key = {index}
                             to = {link.url}>
                             {link.name}
-                        </NavLink>
+                        </IndexNavbarLink>
                     else
-                        return <NavLink
-                            style = {Object.assign({}, link) }
+                        return <NavbarLink
+                            style = {normalLink}
                             key = {index}
                             to = {link.url}>
                             {link.name}
-                        </NavLink>
+                        </NavbarLink>
 
                 })
             }
@@ -45,17 +58,15 @@ var barStyle = {
     alignItems: "center",
     padding: '1vh 5vw 1vh 5vw',
     backgroundColor: '#101010',
-    
 };
 
-var link = {
+var normalLink = {
     textDecoration: 'none',
-    color: 'white',
-    fontSize: '2em'
+    fontSize: '1.5em'
 };
 
 var homeLink = {
-    fontSize: '2.5em'
+    fontSize: '1.85em'
 };
 
 

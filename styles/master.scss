@@ -140,7 +140,7 @@ p.description{
 
 /* link styles for NavbarForReactRouter.  Would like to move these inside the component one day*/
 .navbarForReactRouter a{
-    color: #9d9d9d;
+    color: #afafaf;
     text-decoration: none;
 }
 
@@ -160,7 +160,5 @@ p.description{
     color: #ffffff;
 }
 
-/* selected link */
-.navbarForReactRouter a:active {
-    text-decoration: none;
-}
+
+
