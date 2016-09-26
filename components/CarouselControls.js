@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import actions from '../redux/actions';
+import {actions} from '../redux/actions';
 
 class CarouselControls extends Component {
     constructor(...args) {
@@ -15,7 +15,7 @@ class CarouselControls extends Component {
         this.setState({
             activeGraphIndex: index
         });
-        this.props.dispatch(actions.updateActiveGraphIndex(index));
+        this.props.changeCarousel(index);
     }
 
     render() {

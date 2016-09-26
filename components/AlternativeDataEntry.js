@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import actions from '../redux/actions';
+import {actions} from '../redux/actions';
 import { Modal, Button, Table, FormControl } from 'react-bootstrap';
 import validator from 'validator';
 const replaceAll = require("underscore.string/replaceAll")
@@ -12,19 +12,17 @@ class AlternativeDataEntry extends Component {
             showModal: false,
             alternative: {},
             criteria: [],
-            scores: [[]],
-            dispatch: {}
+            scores: [[]]
         }
     }
 
-    openModal(id, alternative, criteria, scores, dispatch) {
+    openModal(id, alternative, criteria, scores) {
         //console.log("show modal id : " + id);
         this.setState({
             showModal: true,
             alternative: alternative,
             criteria: criteria,
             scores: scores,
-            dispatch: dispatch
         });
     }
 
@@ -43,7 +41,7 @@ class AlternativeDataEntry extends Component {
             });
         if (validator.isNumeric(event.target.value)) {
             event.target.className = replaceAll(event.target.className, " error", "");
-            this.state.dispatch(actions.updateScore(altID, critID, event.target.value));
+            this.props.updateScore(altID, critID, event.target.value);
         }
         else{
             event.target.className = event.target.className + " error";

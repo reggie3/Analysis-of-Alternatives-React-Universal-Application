@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import actions from '../redux/actions';
 import { Button, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import WeightPicker from './WeightPicker';
 import ScoreInverter from './ScoreInverter';
 
-class AddCriteria extends Component {
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
+
+class AddCriteriaComponent extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -40,11 +43,11 @@ class AddCriteria extends Component {
     handleSubmit(event) {
         console.log("submit clicked: " + event);
         event.preventDefault();
-        this.props.dispatch(actions.addCriterion(
+        this.props.addCriterion(
             this.state,
             this.props.alternatives,
             this.props.criteria
-        ));
+        );
 
         // clear the form
         this.setState({
@@ -99,13 +102,13 @@ class AddCriteria extends Component {
                         <WeightPicker
                             weight={this.state.weight}
                             parent={this}
-                            dispatcher={this.props.dispatch}
                             parentHandler={this.setWeight}
+                            updateCriterionWeight={this.props.updateCriterionWeight}
                             />
                         <ScoreInverter
                             parent={this}
-                            dispatcher={this.props.dispatch}
                             parentHandler={this.setInvertedScoring}
+                            updateInvertedScoring={this.props.updateInvertedScoring}
                             />
                     </FormGroup>
                     <FormGroup>
@@ -126,4 +129,21 @@ class AddCriteria extends Component {
     }
 }
 
+function mapStateToProps(state){
+    return{
+        alternatives: state.alternatives,
+        criteria: state.criteria,
+        scores: state.scores
+    };
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        addCriterion: actions.addCriterion,
+        updateInvertedScoring: actions.updateInvertedScoring,
+        updateCriterionWeight: actions.updateCriterionWeight
+    }, dispatch);
+}
+
+const AddCriteria = connect(mapStateToProps, mapDispatchToProps)(AddCriteriaComponent);
 export default AddCriteria;

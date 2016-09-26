@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import actions from '../redux/actions';
 import { Tooltip, Overlay, Button, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 const replaceAll = require("underscore.string/replaceAll");
 import ErrorPopup from './ErrorPopup';
 
-class AddAlternative extends Component {
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
+
+class AddAlternativeComponent extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -64,12 +67,10 @@ class AddAlternative extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.props.dispatch(actions.
-            addAlternative(
+        this.props.addAlternative(
             this.state,
             this.props.alternatives,
             this.props.criteria
-            )
         );
 
         // clear the form
@@ -112,5 +113,21 @@ class AddAlternative extends Component {
         );
     }
 }
+
+
+
+function mapStateToProps(state){
+    return{
+        alternatives: state.alternatives,
+        criteria: state.criteria,
+        scores: state.scores
+    };
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators(actions, dispatch);
+}
+
+const AddAlternative = connect(mapStateToProps, mapDispatchToProps)(AddAlternativeComponent);
 
 export default AddAlternative;

@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import { Button, Glyphicon, Collapse  } from 'react-bootstrap';
-import actions from '../redux/actions';
 import ContentEditable from "react-contenteditable";
 
-class Alternative extends Component {
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
+
+class AlternativeComponent extends Component {
     constructor(...args) {
         super(...args);
 
@@ -14,17 +17,17 @@ class Alternative extends Component {
     }
     deleteItem(event) {
         event.preventDefault();
-        this.props.dispatch(actions.deleteAlternativeAndDeleteAlternativeCritieriaCombintiationToScoreGrid(this.props.alternative.id));
+        this.props.deleteAlternativeAndDeleteAlternativeCritieriaCombintiationToScoreGrid(this.props.alternative.id);
     }
     editDescription(event) {
         event.preventDefault();
-        this.props.dispatch(actions.updateAlternativeDescription(this.props.alternative.id, event.target.value));
+        this.props.updateAlternativeDescription(this.props.alternative.id, event.target.value);
     }
 
     editName(event) {
         event.preventDefault();
-        this.props.dispatch(actions.updateAlternativeName(this.props.alternative.id, 
-            event.target.value));
+        this.props.updateAlternativeName(this.props.alternative.id, 
+            event.target.value);
     }
         // input alternatives performance criteria
     inputAlternativeData(event) {
@@ -66,4 +69,22 @@ class Alternative extends Component {
     }
 }
 
+function mapStateToProps(state){
+    return{
+        alternatives: state.alternatives,
+        criteria: state.criteria,
+        scores: state.scores
+    };
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        deleteAlternativeAndDeleteAlternativeCritieriaCombintiationToScoreGrid: actions.deleteAlternativeAndDeleteAlternativeCritieriaCombintiationToScoreGrid,
+        updateAlternativeDescription: actions.updateAlternativeDescription,
+        updateAlternativeName: actions.updateAlternativeName,
+
+    }, dispatch);
+}
+
+const Alternative = connect(mapStateToProps, mapDispatchToProps)(AlternativeComponent);
 export default Alternative;

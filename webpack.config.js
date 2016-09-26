@@ -6,12 +6,13 @@ var DashboardPlugin = require('webpack-dashboard/plugin');
 module.exports = {
   devtool: 'inline-source-map',
   //entry: './index.js',
-  entry: ['./client/client.js'],
+  entry: ['./client/index.js'],
   output: {
     path: 'public',
     filename: 'bundle.js',
     publicPath: '/'
   },
+
 
   // add this handful of plugins that optimize the build
   // when we're in production
@@ -20,21 +21,28 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     new DashboardPlugin()
-  ] : [],
+  ] : [
+       new webpack.ResolverPlugin(
+            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
+        )
+  ],
 
  // tell webpack which loaders we want applied to specified files. 
     // generate sourcemaps on the JavaScript files,
     preLoaders: [
         {
             test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components|archive)/,
-            
+            exclude: /(node_modules|bower_components|archive)/, 
             loader: 'source-map'
         }
     ],
 
   module: {
         loaders: [
+            {
+                test: /\.json$/,
+                loader: "json-loader" 
+            },
             {
                 test: /\.scss$/,
                 exclude: /(archive)/,

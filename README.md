@@ -1,5 +1,5 @@
 #Analysis of Alternatives React universal app 
-
+isomorphic React App meant.  App runs on server until it is downloaded to the local device (client).  Once downloaded, the program runs completely from the client.
 ### Built from template here:
 [https://github.com/reggie3/React-Universal-App-Template]
 

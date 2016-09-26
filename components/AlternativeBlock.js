@@ -11,12 +11,10 @@ class AlternativeBlock extends Component {
                 <h3 className='blockHeader'>Alternatives</h3>
                 <AddAlternative 
                     alternatives={this.props.alternatives} 
-                    criteria={this.props.criteria}
-                    dispatch={this.props.dispatch}/>
+                    criteria={this.props.criteria}/>
                 <AlternativeList 
                     alternatives={this.props.alternatives}
                     criteria = {this.props.criteria} 
-                    dispatch={this.props.dispatch}
                     scores={this.props.scores}
                 />
             </div> 

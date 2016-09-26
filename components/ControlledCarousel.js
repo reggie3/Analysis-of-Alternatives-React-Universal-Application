@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import actions from '../redux/actions';
+import {actions} from '../redux/actions';
 import { Carousel } from 'react-bootstrap';
 import ChartCriteriaWeights from'./ChartCriteriaWeights';
 import ChartWeightedScores from'./ChartWeightedScores';
@@ -21,7 +21,7 @@ class ControlledCarousel extends Component {
             activeGraphIndex: selectedIndex,
             direction: e.direction
         });
-        this.props.dispatch(actions.updateActiveGraphIndex(selectedIndex));
+        this.props.changeCarousel(selectedIndex);
     }
 
     render() {

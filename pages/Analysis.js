@@ -5,19 +5,18 @@ import AnalysisTable from "../components/AnalysisTable";
 import CarouselControls from "../components/CarouselControls";
 import ControlledCarousel from "../components/ControlledCarousel";
 
-import actions from '../redux/actions';
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/main.scss';
 
 
-
-// Connects a React component to a Redux store.
-import { connect } from 'react-redux';
-class App extends Component {
+class AnalysisPage extends Component {
 
     componentWillMount() {
         console.log("init");
-        this.props.dispatch(actions.completeScoreGrid(this.props.alternatives, this.props.criteria));
+        this.props.completeScoreGrid(this.props.state.alternatives, this.props.state.criteria);
     }
 
     render() {
@@ -26,27 +25,27 @@ class App extends Component {
                 <div id='graphBlock '>
 
                     <ControlledCarousel
-                        graphNames = {this.props.graphNames}
-                        activeGraphIndex = {this.props.activeGraphIndex}
-                        state = {this.props}
-                        dispatch = {this.props.dispatch}/>
+                        graphNames = {this.props.state.graphNames}
+                        activeGraphIndex = {this.props.state.activeGraphIndex}
+                        state = {this.props.state}
+                        changeCarousel = {this.props.updateActiveGraphIndex}/>
                     <CarouselControls
-                        graphNames = {this.props.graphNames}
-                        activeGraphIndex = {this.props.activeGraphIndex}
-                        dispatch={this.props.dispatch}/>
+                        graphNames = {this.props.state.graphNames}
+                        activeGraphIndex = {this.props.state.activeGraphIndex}
+                        changeCarousel = {this.props.updateActiveGraphIndex}/>
                 </div>
                 <div className='infoBlock'>
                     <AlternativeBlock
-                        alternatives = {this.props.alternatives}
-                        criteria={this.props.criteria}
-                        scores={this.props.scores}
-                        dispatch={this.props.dispatch}
+                        alternatives = {this.props.state.alternatives}
+                        criteria={this.props.state.criteria}
+                        scores={this.props.state.scores}
+                        dispatch={this.props.state.dispatch}
                         />
                     <CriteriaBlock
-                        alternatives = {this.props.alternatives}
-                        criteria={this.props.criteria}
-                        dispatch={this.props.dispatch}
-                        scores={this.props.scores}
+                        alternatives = {this.props.state.alternatives}
+                        criteria={this.props.state.criteria}
+                        dispatch={this.props.state.dispatch}
+                        scores={this.props.state.scores}
                         />
                 </div>
             </div>
@@ -54,10 +53,16 @@ class App extends Component {
     }
 }
 
-
-function mapStateToProps(state) {
-    return state;
+function mapStateToProps(state){
+    return{
+        state: state
+    };
 }
 
-// subscribe to Redux store updates.
-export default connect(mapStateToProps)(App);
+function mapDispatchToProps(dispatch){
+    return bindActionCreators(actions, dispatch);
+}
+
+const Analysis = connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);
+
+export default Analysis;

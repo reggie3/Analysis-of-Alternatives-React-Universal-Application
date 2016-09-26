@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import actions from '../redux/actions';
+import {actions} from '../redux/actions';
 import { Modal, Button, Table, FormControl, Overlay, Tooltip } from 'react-bootstrap';
 import validator from 'validator';
 const replaceAll = require("underscore.string/replaceAll");
@@ -24,8 +24,7 @@ class CriterionDataEntry extends Component {
             showModal: true,
             criterion: criterion,
             alternatives: alternatives,
-            scores: scores,
-            dispatch: dispatch
+            scores: scores
         });
     }
 
@@ -46,7 +45,7 @@ class CriterionDataEntry extends Component {
         if (validator.isNumeric(event.target.value)) {
             this.setState({show: false});
             event.target.className = replaceAll(event.target.className, " error", "");
-            this.state.dispatch(actions.updateScore(altID, critID, event.target.value));
+            this.props.updateScore(altID, critID, event.target.value);
         }
         else {
             event.target.className = event.target.className + " error";

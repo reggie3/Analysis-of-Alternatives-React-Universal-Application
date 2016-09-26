@@ -36,6 +36,9 @@ class ChartNormalizedScores extends Component {
             dataSet.name = criterion.name;
 
             alternatives.forEach(function (alternative) {
+                if(!scores[alternative.id]){
+                    scores[alternative.id] =[];
+                }
                 dataSet[alternative.name] = scores[alternative.id][criterion.id];
             }, this);
 

@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import { Button, Glyphicon, Collapse } from 'react-bootstrap';
-import actions from '../redux/actions';
 import WeightPicker from './WeightPicker';
 import ScoreInverter from './ScoreInverter';
 import ContentEditable from "react-contenteditable";
 
-class Criterion extends Component {
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
+
+class CriterionComponent extends Component {
     constructor(...args) {
         super(...args);
 
@@ -13,7 +16,7 @@ class Criterion extends Component {
     }
     deleteItem(event) {
         event.preventDefault();
-        this.props.dispatch(actions.deleteCriterionAndDeleteAlternativeCritieriaCombintiationToScoreGrid(this.props.criterion.id));
+        this.props.deleteCriterionAndDeleteAlternativeCritieriaCombintiationToScoreGrid(this.props.criterion.id);
     }
 
     expandItem(event) {
@@ -24,12 +27,12 @@ class Criterion extends Component {
 
     editDescription(event) {
         event.preventDefault();
-        this.props.dispatch(actions.updateCriterionDescription(this.props.criterion.id, event.target.value));
+        this.props.updateCriterionDescription(this.props.criterion.id, event.target.value);
     }
 
     editName(event) {
         event.preventDefault();
-        this.props.dispatch(actions.updateCriterionName(this.props.criterion.id, event.target.value));
+        this.props.updateCriterionName(this.props.criterion.id, event.target.value);
     }
 
      // input the performance of the alternatives for this criterion
@@ -63,12 +66,11 @@ class Criterion extends Component {
                             <WeightPicker
                                 weight={this.props.criterion.weight}
                                 id={this.props.criterion.id}
-                                dispatch={this.props.dispatch}
+                                updateCriterionWeight={this.props.updateCriterionWeight}
                                 />
                             <ScoreInverter
-                                useInvertedScoring={this.props.criterion.useInvertedScoring}
                                 id={this.props.criterion.id}
-                                dispatch={this.props.dispatch}
+                                updateInvertedScoring={this.props.updateInvertedScoring}
                                 value={this.props.criterion.useInvertedScoring}
                                 />
                         </div>
@@ -85,4 +87,23 @@ class Criterion extends Component {
     }
 }
 
+function mapStateToProps(state){
+    return{
+        alternatives: state.alternatives,
+        criteria: state.criteria,
+        scores: state.scores
+    };
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        deleteCriterionAndDeleteAlternativeCritieriaCombintiationToScoreGrid: actions.deleteCriterionAndDeleteAlternativeCritieriaCombintiationToScoreGrid,
+        updateCriterionDescription: actions.updateCriterionDescription,
+        updateCriterionName: actions.updateCriterionName,
+        updateCriterionWeight: actions.updateCriterionWeight,
+        updateInvertedScoring: actions.updateInvertedScoring
+    }, dispatch);
+}
+
+const Criterion = connect(mapStateToProps, mapDispatchToProps)(CriterionComponent);
 export default Criterion;

@@ -9,8 +9,11 @@ export default function criteria(criteria = [], action) {
     // create two empty objects to keep track of stuff
     let updatedCriteria = [], updatedCriterion = {};
     switch (action.type) {
+        case "SORT_CRITERIA":
+            updatedCriteria = _.orderBy(criteria, ['name'], ['asc']);
+            return updatedCriteria;
+
         case "ADD_CRITERION":
-            
             let newCriteriaObject = {
                 name: action.criterion.name,
                 description: action.criterion.description,
@@ -21,7 +24,7 @@ export default function criteria(criteria = [], action) {
             updatedCriteria = criteria.concat(newCriteriaObject);
             updatedCriteria = _.orderBy(updatedCriteria, ['name'], ['asc']);
 
-            return updatedCriteria
+            return updatedCriteria;
 
         case "DELETE_CRITERION":
             //TODO: remove all entries for this criterion from all the alternatives' "scoring" lists

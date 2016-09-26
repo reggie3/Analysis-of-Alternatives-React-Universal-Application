@@ -41,6 +41,9 @@ class ChartWeightedScores extends Component {
             dataSet.name = criterion.name;
 
             alternatives.forEach(function (alternative) {
+                if(!scores[alternative.id]){
+                    scores[alternative.id] = [];
+                }
                 dataSet[alternative.name] = scores[alternative.id][criterion.id];
                 dataSet[alternative.name] > maxY ? 
                     maxY =  parseInt(dataSet[alternative.name]) + 2 : null;

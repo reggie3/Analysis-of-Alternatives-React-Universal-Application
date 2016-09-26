@@ -2,7 +2,14 @@ import React, {Component} from 'react';
 import Alternative from './Alternative';
 import AlternativeDataEntry from "./AlternativeDataEntry";
 
-class AlternativeList extends Component {
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {actions} from '../redux/actions';
+
+class AlternativeListComponent extends Component {
+    componentWillMount(){
+        this.props.sortAlternatives();
+    }
     closeModal() {
         this.setState({ showModal: false });
     }
@@ -16,8 +23,7 @@ class AlternativeList extends Component {
         this.AlternativeDataEntry.openModal(id, 
             alternative, 
             this.props.criteria,
-            this.props.scores,
-            this.props.dispatch);
+            this.props.scores);
     }
     
     render() {
@@ -30,7 +36,6 @@ class AlternativeList extends Component {
                             return <Alternative 
                                 key ={alternative.id} 
                                 alternative={alternative} 
-                                dispatch={this.props.dispatch}
                                 scores={this.props.scores}
                                 openModal = {this.openModal.bind(this)}
                                 closeModal = {this.closeModal.bind(this)}
@@ -38,10 +43,27 @@ class AlternativeList extends Component {
                         })
                     }
                 </ul>
-                <AlternativeDataEntry ref={(ref) => this.AlternativeDataEntry = ref}/>
+                <AlternativeDataEntry 
+                updateScore = {this.props.updateScore}
+                ref={(ref) => this.AlternativeDataEntry = ref}/>
             </div>
         );
     }
 }
+function mapStateToProps(state){
+    return{
+        update: state.alternatives,
+        criteria: state.criteria,
+        scores: state.scores
+    };
+}
 
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        updateScore: actions.updateScore,
+        sortAlternatives: actions.sortAlternatives
+    }, dispatch);
+}
+
+const AlternativeList = connect(mapStateToProps, mapDispatchToProps)(AlternativeListComponent);
 export default AlternativeList;

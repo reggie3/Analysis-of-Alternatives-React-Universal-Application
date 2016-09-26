@@ -1,0 +1,17 @@
+{
+  "name": "tutorial",
+  "description": "",
+  "main": "index.js",
+  "license": "ISC",
+  "homepage": "https://github.com/reggie3/Analysis-of-Alternatives-React-Universal-Application",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-social": "^5.0.0"
+  }
+}

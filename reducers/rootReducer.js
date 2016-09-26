@@ -1,6 +1,7 @@
 import Update from 'react/lib/update';
 import { combineReducers } from 'redux';
-import reduceReducers from 'reduce-reducers';
+
+
 import alternatives from './alternatives';
 import criteria from './criteria';
 import scores from './scores';
@@ -8,14 +9,21 @@ import normalizedScores from './normalizedScores';
 import weightedScores from './weightedScores';
 import activeGraphIndex from './activeGraphIndex';
 import graphNames from './graphNames';
+import userData from './userData';
+import modalDisplay from './modalDisplay';
 
-const reducer =  combineReducers({
+import {routerReducer} from 'react-router-redux';
+
+const rootReducer =  combineReducers({
         criteria,
         alternatives,
         scores,
         normalizedScores,
         weightedScores,
         activeGraphIndex,
-        graphNames
+        graphNames,
+        userData,
+        modalDisplay,
+        routing: routerReducer
 });
-export default reducer;
+export default rootReducer;

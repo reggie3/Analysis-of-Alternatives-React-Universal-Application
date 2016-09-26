@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {ButtonGroup, Button, FormGroup, ControlLabel} from 'react-bootstrap';
-import actions from '../redux/actions';
+import {actions} from '../redux/actions';
 
 
 const MyButton = ({ isActive, setWeight, idx }) => {
@@ -26,7 +26,7 @@ class WeightPicker extends Component {
         });
         // if props.id is defined then we can update the application's state directly
         if(this.props.id !== undefined){
-            this.props.dispatch(actions.updateCriterionWeight(this.props.id, value));
+            this.props.updateCriterionWeight(this.props.id, value);
         }
         // othewise set the state of the parent property since this criteria hasn't been
         // added to the application state yet, and thus doesn't have an ID

@@ -12,7 +12,10 @@ export default function alternatives(alternatives = [], action) {
     let updatedAlternative = {}, updatedAlternatives = [];
 
     switch (action.type) {
-
+        case "SORT_ALTERNATIVES":
+            updatedAlternatives = _.orderBy(alternatives, ['name'], ['asc']);
+            return updatedAlternatives;
+            
         case "ADD_ALTERNATIVE":
             console.log("reducer add alternative called");
 
