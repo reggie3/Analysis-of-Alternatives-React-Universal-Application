@@ -12,7 +12,9 @@ import thunk from 'redux-thunk';
 import secrets from '../config/secrets';
 import AuthService from '../utilities/AuthService';
 
-const auth = new AuthService(secrets.auth0.clientID, secrets.auth0.domain);
+const auth = new AuthService(
+  secrets.auth0.clientID, secrets.auth0.domain
+  );
 
 const logger = createLogger();
 //const promise = promiseMiddleware();
@@ -22,16 +24,29 @@ let defaultState = {
     token: null,
     id: 1,
     auth: auth,
-    loggedIn: false
+    loggedIn: false,
+  },
+  
+  cognito: {
+    userPool: undefined
+  },
+  
+  auth0:{
+    loggedIn: false,
+    profile:{
+      email:"",
+      nickname:""
+    }
   },
   modalDisplay: {
     showLogin: false,
-    showCreateAccount: true
+    showCreateAccount: false,
+    showAccountCreationFeedback: false
   },
   alternatives: [{
     id: 0,
     name: "Red Mustang",
-    description: "Red Mustang at Sam's car Shack.",
+    description: "Red Mustang at Sam's car Shack .",
   },
     {
       id: 1,

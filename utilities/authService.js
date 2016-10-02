@@ -7,7 +7,8 @@ export default class AuthService {
     // Configure Auth0
     this.auth0 = new Auth0({
       clientID: clientId,
-      domain: domain,
+      domain: 'reggie3.auth0.com',
+      callbackURL: '',
       responseType: 'token'
     });
 
@@ -15,17 +16,17 @@ export default class AuthService {
     this.signup = this.signup.bind(this)
   }
 
-  login(params, onError){
+  login(params, onError) {
     //redirects the call to auth0 instance
     this.auth0.login(params, onError)
   }
 
-  signup(params, onError){
+  signup(params, onError) {
     //redirects the call to auth0 instance
     this.auth0.signup(params, onError)
   }
 
-  parseHash(hash){
+  parseHash(hash) {
     // uses auth0 parseHash method to extract data from url hash
     const authResult = this.auth0.parseHash(hash)
     if (authResult && authResult.idToken) {
@@ -33,22 +34,22 @@ export default class AuthService {
     }
   }
 
-  loggedIn(){
+  loggedIn() {
     // Checks if there is a saved token and it's still valid
     return !!this.getToken()
   }
 
-  setToken(idToken){
+  setToken(idToken) {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken)
   }
 
-  getToken(){
+  getToken() {
     // Retrieves the user token from localStorage
     return localStorage.getItem('id_token')
   }
 
-  logout(){
+  logout() {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
   }

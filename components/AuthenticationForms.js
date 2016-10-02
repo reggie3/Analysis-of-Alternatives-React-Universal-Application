@@ -1,10 +1,12 @@
 import validator from 'validator';
 import React, {Component} from 'react';
-import { Carousel, Modal, Button, FormControl,
+import { Modal, Button, FormControl,
     FormGroup, ControlLabel, HelpBlock } from 'react-bootstrap';
 import {TwitterLogin, Facebook, Google} from './SocialLogin';
 import { connect } from 'react-redux';
 import actions from '../redux/actions';
+//import * as cognitoHelper from '../utilities/cognitoHelper';
+
 
 export class Login extends Component {
 
@@ -12,12 +14,17 @@ export class Login extends Component {
         super(props, context);
         this.state = {
             showLoginBol: this.props.showLoginBol,
-            emailAddress: '',
-            password: ''
+            emailAddress: '947172@22.com',
+            password: '123456',
+            val: {
+                email: { msg: '', state: '' },
+                pass: { msg: '', state: '' },
+            }
         }
     }
     showLogin() {
         this.props.dispatchShowLogin();
+        cognitoHelper.cognitoTest();
     }
 
     closeModal() {
@@ -39,17 +46,55 @@ export class Login extends Component {
         }
     }
 
+    setFormNotification(name, state, message) {
+        let newVal = Object.assign({}, this.state.val);
+        newVal[name].msg = message;
+        if (name !== 'account') {
+            newVal[name].state = state;
+        }
+        this.setState({ val: newVal });
+    }
+
     login() {
-        //this.props.fetchData();
-        //this.props.dispatchLogin(this.state.emailAddress, this.state.password);
-        this.props.auth.login({
-            connection: 'Username-Password-Authentication',
-            responseType: 'token',
-            email: this.state.emailAddress,
-            password: this.state.password
-        }, function (err) {
-            if (err) alert("something went wrong: " + err.message);
-        });
+        let formPassedTests = true;
+
+        // set all the form fields to success, and only change them to errors
+        // if they are errors
+        this.setFormNotification('pass', 'success', '');
+        this.setFormNotification('email', 'success', '');
+
+        // make sure something is in the password field
+        if (this.state.password.length === 0) {
+            this.setFormNotification('pass', 'error', 'Password cannot be blank.'); formPassedTests = false;
+        }
+        // check email address
+        if (!validator.isEmail(this.state.emailAddress)) { this.setFormNotification('email', 'error', 'Not a valid email address.'); formPassedTests = false }
+        if (formPassedTests) {
+            this.props.initAuth0(this.props.currentUrl);
+
+            this.props.auth.login({
+                connection: 'Username-Password-Authentication',
+                email: this.state.emailAddress,
+                password: this.state.password,
+                redirect: false,
+                sso: false,
+            }, function (err, result) {
+                if (err) {
+                    alert("something went wrong: " + err.message);
+                    this.closeModal().bind(this);
+                    return;
+                }
+                this.props.dispatchHideLoginForms();
+                this.props.saveAuth0TokenData(result);
+                this.props.auth0.auth0.getProfile(result.idToken, function (err, profile) {
+                    if(err){
+                        this.closeModal().bind(this);
+                        return;
+                    }
+                    this.props.saveAuth0Profile(profile);
+                }.bind(this));
+            }.bind(this));
+        }
     }
 
 
@@ -73,7 +118,8 @@ export class Login extends Component {
                         <Google/>
                     </div>
                     <form style={flexItem}>
-                        <FormGroup controlId="formBasicText">
+                        <FormGroup controlId="formBasicText"
+                            validationState={this.state.val.email.state}>
 
                             <FormControl
                                 style={flexItem}
@@ -83,6 +129,12 @@ export class Login extends Component {
                                 onChange={this.handleInputChange.bind(this) }
                                 value={this.state.emailAddress}
                                 />
+                            <HelpBlock>
+                                {this.state.val.email.msg}
+                            </HelpBlock>
+                        </FormGroup>
+                        <FormGroup controlId="formBasicText"
+                            validationState={this.state.val.pass.state}>
                             <FormControl
                                 style={flexItem}
                                 name='password'
@@ -91,8 +143,9 @@ export class Login extends Component {
                                 onChange={this.handleInputChange.bind(this) }
                                 value={this.state.password}
                                 />
-                            <FormControl.Feedback />
-                            <HelpBlock>Validation is based on string length.</HelpBlock>
+                            <HelpBlock>
+                                {this.state.val.pass.msg}
+                            </HelpBlock>
                         </FormGroup>
                     </form>
                     <Button
@@ -129,12 +182,14 @@ export class CreateAccount extends Component {
 
     constructor(props, context) {
         super(props, context);
+        let random = Math.floor(Math.random() * 1000000);
         this.state = {
             showCreateAccountBol: this.props.showCreateAccountBol,
-            emailAddress: '1@2.com',
+            emailAddress: random + '@eil.com',
+            userName: random + "", //needs to be a string
             password1: '123456',
             password2: '123456',
-            userName: 'asd',
+
             val: {
                 name: { msg: '', state: '' },
                 email: { msg: '', state: '' },
@@ -146,6 +201,7 @@ export class CreateAccount extends Component {
 
     showLogin() {
         this.props.dispatchShowLogin();
+        cognitoHelper.cognitoTest();
     }
 
     closeModal() {
@@ -169,7 +225,7 @@ export class CreateAccount extends Component {
         let newVal = Object.assign({}, this.state.val);
         newVal[name].msg = message;
         if (name !== 'account') {
-            newVal[name].state = state
+            newVal[name].state = state;
         }
         this.setState({ val: newVal });
     }
@@ -186,21 +242,53 @@ export class CreateAccount extends Component {
         // check password
         if (!this.checkMatchingPasswords()) { this.setFormNotification('pass', 'error', 'Passwords must match.'); formPassedTests = false }
         if (!this.checkPasswordLength()) { this.setFormNotification('pass', 'error', 'Password must be at least 6 characters long'); formPassedTests = false }
-        
+
         // check email address
         if (!validator.isEmail(this.state.emailAddress)) { this.setFormNotification('email', 'error', 'Not a valid email address.'); formPassedTests = false }
-        
+
         if (formPassedTests) {
-            this.props.auth.signup({
+            //this.props.dispatchCreateAccount(this.state.emailAddress, this.state.password1);
+            //this.props.createCognitoUser(this.state.userName, this.state.emailAddress, this.state.password1);
+
+            // update the current URL so that we come back to this same page after creating the account
+            this.props.initAuth0(this.props.currentUrl);
+
+            this.props.auth0.auth0.signup({
                 connection: 'Username-Password-Authentication',
-                responseType: 'token',
                 username: this.state.userName,
                 email: this.state.emailAddress,
-                password: this.state.password1,
-            }, function (err) {
-                // if (err) alert("something went wrong: " + err.message);
-                this.setFormNotification('account', 'error', err.message);
-                this.setFormNotification('name', 'error', '');
+                //popup: true,
+                sso: false,
+                //redirect: false,
+                rememberLastLogin: false,
+                password: this.state.password1
+            }, function (err, result) {
+                if (err) {
+                    if(err.message.toLowerCase().indexOf('username')!==-1){
+                        this.setFormNotification('name', 'error', err.message);
+                    }
+                    else if(err.message.toLowerCase().indexOf('email')!==-1){
+                         this.setFormNotification('email', 'error', err.message);
+                    }
+                    else{
+                        this.setFormNotification('account', 'error', err.message);
+                        this.setFormNotification('email', 'error', "Email address already in use.");
+                    }
+                    
+                    console.log(err.message);
+                    return;
+                }
+                this.props.saveAuth0TokenData(tokenData);
+                this.props.auth0.auth0.getProfile(result.idToken, function (err, profile) {
+                    if(err){
+                        this.closeModal().bind(this);
+                        return;
+                    }
+                    // alert('hello ' + profile.name);
+                    this.props.dispatchHideLoginForms();
+                    this.props.saveAuth0Profile(profile);
+                    this.props.dispatchShowAccountCreationFeedback();
+                }.bind(this));
             }.bind(this));
         }
     }
@@ -234,7 +322,8 @@ export class CreateAccount extends Component {
                         <HelpBlock>
                             {this.state.val.account.msg}
                         </HelpBlock>
-                        <FormGroup controlId="formBasicText" validationState={this.state.val.name.state}>
+                        <FormGroup controlId="formBasicText"
+                            alidationState={this.state.val.name.state}>
                             <FormControl
                                 style={flexItem}
                                 type="text"

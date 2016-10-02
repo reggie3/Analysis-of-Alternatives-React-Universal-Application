@@ -6,6 +6,7 @@ import secrets from '../config/secrets'
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import {actions} from '../redux/actions';
+import { AWSCognito, CognitoUserPool, CognitoUserAttribute, CognitoUser } from 'amazon-cognito-identity-js';
 
 let links = [
     {
@@ -37,6 +38,10 @@ let links = [
         label: "Login",
         type: "button"
     },
+    {
+        label: "Logout",
+        type: "button"
+    },
 ];
 
 class AppComponent extends Component {
@@ -45,21 +50,23 @@ class AppComponent extends Component {
     }
     // sort the list of criteria prior to displaying it for the first time
     componentWillMount() {
-
+        this.props.actions.initAuth0();
+        //this.props.actions.initCognito();
+    
     }
 
     render() {
         return (
             <div>
-            <Navbar
-                links = {links}
-                actions = {this.props.actions}
-                state = {this.props.state}
-                />
-            <div style={content}>
-                {this.props.children}
+                <Navbar
+                    links = {links}
+                    actions = {this.props.actions}
+                    state = {this.props.state}
+                    />
+                <div style={content}>
+                    {this.props.children}
+                </div>
             </div>
-        </div>
         )
     }
 }
@@ -70,28 +77,54 @@ var content = {
 }
 
 function mapStateToProps(state) {
-    return {state: {
-        showLogin: state.modalDisplay.showLogin,
-        showCreateAccount: state.modalDisplay.showCreateAccount,
-        auth: state.userData.auth
-    }};
+    return {
+        state: {
+            showLogin: state.modalDisplay.showLogin,
+            showCreateAccount: state.modalDisplay.showCreateAccount,
+            showAccountCreationFeedback: state.modalDisplay.showAccountCreationFeedback,
+            auth: state.userData.auth,
+            auth0: state.auth0,
+            cognito: state.cognito,
+            currentUrl: state.routing.locationBeforeTransitions.pathname,
+            loggedIn: state.auth0.loggedIn
+        }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {actions: bindActionCreators({
-        // actions
-        sort: actions.sort,
-        dispatchLogin: actions.login,
+    return {
+        actions: bindActionCreators({
+            // actions
+            sort: actions.sort,
 
-        // api calls
-        dispatchCreateAccount: actions.createAccount,
-       
-        // show modals
-        dispatchShowLogin: actions.showLogin,
-        dispatchShowCreateAccount: actions.showCreateAccount,
-        dispatchHideLoginForms: actions.hideLoginForms,
+            // api calls
+            dispatchLogin: actions.login,
+            dispatchCreateAccount: actions.createAccount,
+            initCognito: actions.initCognito,
+            createCognitoUser: actions.createCognitoUser,
+            loginCognitoUser: actions.loginCognitoUser,
 
-    }, dispatch)};
+            // auth0
+            // the following are not required when using the Auth0 sdk
+            // loginAuth0User: actions.loginAuth0User,
+            // createAuth0User: actions.createAuth0User,
+            
+            // initialize auth0 prior to making a call
+            initAuth0: actions.initAuth0,
+            // save the user profile to the store after we login or create a user
+            saveAuth0Profile: actions.saveAuth0Profile,
+            saveAuth0TokenData: actions.saveAuth0TokenData, 
+            logoutAuth0User: actions.logoutAuth0User,
+            
+
+            // login, create account, create account feeback modal dialog controls
+            dispatchShowLogin: actions.showLogin,
+            dispatchShowCreateAccount: actions.showCreateAccount,
+            dispatchHideLoginForms: actions.hideLoginForms,
+            dispatchShowAccountCreationFeedback: actions.showAccountCreationFeedback
+
+        }, dispatch)
+    };
 }
 
 const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent);

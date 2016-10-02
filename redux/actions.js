@@ -3,6 +3,8 @@ import criteriaActions from './criteriaActions';
 import alternativesActions from './alternativesActions';
 import scoresActions from './scoresActions';
 import modalDisplayActions from './modalDisplayActions';
+import cognitoActions from './cognitoActions';
+import auth0Actions from './auth0Actions';
 
 
 let localActions = {  
@@ -18,5 +20,7 @@ let localActions = {
 export const actions = Object.assign({},  
     userDataActions, criteriaActions, 
     alternativesActions, scoresActions, 
-    localActions, modalDisplayActions);
+    localActions, modalDisplayActions,
+    cognitoActions, 
+    auth0Actions);
 

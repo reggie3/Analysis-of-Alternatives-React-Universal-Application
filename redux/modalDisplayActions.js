@@ -13,6 +13,11 @@ let modalDisplayActions = {
         return{
             type: 'HIDE_LOGIN_FORMS'
         }
+    },
+    showAccountCreationFeedback(){
+        return{
+            type: 'SHOW_ACCOUNT_CREATION_FEEDBACK'
+        }
     }
 }
 

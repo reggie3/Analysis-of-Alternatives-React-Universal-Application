@@ -3,6 +3,8 @@ import secrets from '../config/secrets';
 
 import { CALL_API } from 'redux-api-middleware';
 
+const URL = 'https://reggie3.auth0.com/';
+
 let userDataActions = {
     /*
     fetchData: function () {
@@ -35,40 +37,12 @@ let userDataActions = {
                 data: json
             }));
     }*/
-    fetchData() {
-        return {
-            [CALL_API]: {
-                endpoint: 'http://rest.learncode.academy/api/learncode/friends',
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    //'Authorization': `Bearer ${api.token}`
-                },
-                types: [
-                    {
-                        type: 'REQUEST',
-                        payload: (action) => {
-                            return {
-                                endpoint: action[CALL_API].endpoint
-                            };
-                        }
-                    },
-                    {
-                        type: 'LOGIN_SUCCESS',  
-                    },
-                    {
-                        type: 'LOGIN_FAILURE',  
-                    }
-                ],
-            }
-        }
-    },
+
     login(emailAddress, password) {
         return {
             [CALL_API]: {
-                endpoint: 'http://rest.learncode.academy/api/learncode/friends',
-                method: 'GET',
+                endpoint: URL + 'dbconnections/signup',
+                method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -184,7 +158,7 @@ let userDataActions = {
         console.log("creating: " + emailAddress +",  " + password);
         return {
             [CALL_API]: {
-                endpoint: 'http://rest.learncode.academy/api/learncode/friends',
+                endpoint: URL + 'dbconnections/signup',
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

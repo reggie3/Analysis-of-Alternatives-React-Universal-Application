@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import { Link, IndexLink  } from 'react-router';
 import {Button} from 'react-bootstrap';
-import AccountAuthentication from './AccountAuthentication';
+// import AccountAuthentication from './AccountAuthentication';
 import {Login, CreateAccount} from './AuthenticationForms';
+import AccountCreationFeedback from './modals/AccountCreationFeedback';
+import ToggleDisplay from 'react-toggle-display';
+
 
 
 let IndexNavbarLink = React.createClass({
@@ -19,7 +22,8 @@ let NavbarButton = React.createClass({
     render() {
         return <Button
             bsStyle="info"
-            onClick = {this.props.onClick}>
+            onClick = {this.props.onClick}
+            style = {this.props.style}>
             {
                 this.props.label
             }
@@ -35,96 +39,126 @@ export default class NavbarForReactRouterComponent extends Component {
         super(props, context);
         this.state = {
             showLogin: false,
-            showCreateAccount: false
+            showCreateAccount: false,
         }
     }
 
     navLink(link) {
         return "link";
     }
-    /*
-    showLogin() {
-        if(this.Login){
-            this.Login.openModal();
-        }
-        if(this.CreateAccount){
-            this.CreateAccount.closeModal();
-        }
-    }
 
-    showCreateAccount() {
-        if(this.CreateAccount){
-            this.CreateAccount.openModal();
-        }
-        if(this.Login){
-            this.Login.closeModal();
-        }
-    }*/
-    checkAuth(){
+    checkAuth() {
         console.log("checkAuth");
     }
-    showLogin(){
+    // show the login dialog
+    showLogin() {
         this.props.actions.dispatchShowLogin();
+        // this.props.actions.dispatchShowCreateAccount();
+    }
+
+    // log the user out
+    logout() {
+        this.props.actions.logoutAuth0User();
     }
 
     render() {
-        return <div className = "navbarForReactRouter" style={barStyle}>
-            {
-                this.props.links.map((link, index) => {
-                    switch (link.type) {
-                        case "link":
-                            if (link.isHome)
-                                return <IndexNavbarLink
-                                    style = {Object.assign({}, normalLink, homeLink) }
-                                    key = {index}
-                                    to = {link.url}>
-                                    {link.name}
-                                </IndexNavbarLink>
-                            else if(link.requireAuth)
-                                return <IndexNavbarLink
-                                    style = {Object.assign({}, normalLink) }
-                                    key = {index}
-                                    to = {link.url}
-                                    onClick = {this.checkAuth}>
-                                    {link.name}
-                                </IndexNavbarLink>
-                            else
-                                return <NavbarLink
-                                    style = {normalLink}
-                                    key = {index}
-                                    to = {link.url}>
-                                    {link.name}
-                                </NavbarLink>
+        // display a login button if no profile has been saved to the state yet.  Otherwise
+        // display a logout button
+        let loginOrLogoutButton;
+        if (this.props.state.auth0.loggedIn) {
+            loginOrLogoutButton = <NavbarButton
+                label = "Logout"
+                onClick = {this.logout.bind(this) }
+                style = {rightJustify}/>
+        }
+        else {
+            loginOrLogoutButton = <NavbarButton
+                label = "Login"
+                onClick = {this.showLogin.bind(this) }
+                style = {rightJustify}/>
+        }
 
-                        case "button":
-                            return <NavbarButton
-                                label = {link.label}
-                                key = {index}
-                                onClick = {this.showLogin.bind(this)}>
-                            </NavbarButton>
-                    }
-                })
-            }
 
-            <Login 
-                ref={(c) => this.Login = c}
-                showLoginBol = {this.props.state.showLogin}
-                auth = {this.props.state.auth}
-                dispatchLogin = {this.props.actions.dispatchLogin}
-                dispatchShowLogin = {this.props.actions.dispatchShowLogin}
-                dispatchShowCreateAccount = {this.props.actions.dispatchShowCreateAccount}
-                dispatchHideLoginForms = {this.props.actions.dispatchHideLoginForms}
-                />
-            <CreateAccount 
-                ref={(c) => this.CreateAccount = c}
-                showCreateAccountBol = {this.props.state.showCreateAccount}
-                auth = {this.props.state.auth}
-                dispatchCreateAccount = {this.props.actions.dispatchCreateAccount}
-                dispatchShowLogin = {this.props.actions.dispatchShowLogin}
-                dispatchShowCreateAccount = {this.props.actions.dispatchShowCreateAccount}
-                dispatchHideLoginForms = {this.props.actions.dispatchHideLoginForms}
-                />
-        </div>
+
+        return (
+            <div className = "navbarForReactRouter" style={barStyle}>
+                {
+                    this.props.links.map((link, index) => {
+                        switch (link.type) {
+                            case "link":
+                                if (link.isHome)
+                                    return <IndexNavbarLink
+                                        style = {Object.assign({}, normalLink, homeLink) }
+                                        key = {index}
+                                        to = {link.url}>
+                                        {link.name}
+                                    </IndexNavbarLink>
+                                else if (link.requireAuth)
+                                    return <ToggleDisplay
+                                        key = {index}
+                                        hide = {!this.props.state.loggedIn}>
+                                        <NavbarLink
+                                            style = {Object.assign({}, normalLink) }
+                                            key = {index}
+                                            to = {link.url}
+                                            onClick = {this.checkAuth}>
+                                            {link.name}
+                                        </NavbarLink>
+                                    </ToggleDisplay>
+                                else
+                                    return <NavbarLink
+                                        style = {normalLink}
+                                        key = {index}
+                                        to = {link.url}>
+                                        {link.name}
+                                    </NavbarLink>
+                        }
+                    }) }
+
+                {loginOrLogoutButton}
+
+                }
+
+                <Login
+                    showLoginBol = {this.props.state.showLogin}
+                    auth = {this.props.state.auth}
+                    auth0 = {this.props.state.auth0}
+                    dispatchLogin = {this.props.actions.dispatchLogin}
+                    dispatchShowLogin = {this.props.actions.dispatchShowLogin}
+                    dispatchShowCreateAccount = {this.props.actions.dispatchShowCreateAccount}
+                    dispatchHideLoginForms = {this.props.actions.dispatchHideLoginForms}
+                    dispatchLogin = {this.props.actions.dispatchLogin}
+                    loginCognitoUser = {this.props.actions.loginCognitoUser}
+                    initAuth0 = {this.props.actions.initAuth0}
+                    currentUrl = {this.props.state.currentUrl}
+                    saveAuth0Profile = {this.props.actions.saveAuth0Profile}
+                    saveAuth0TokenData = {this.props.actions.saveAuth0TokenData}
+                    />
+
+                <CreateAccount
+                    showCreateAccountBol = {this.props.state.showCreateAccount}
+                    auth = {this.props.state.auth}
+                    auth0 = {this.props.state.auth0}
+                    dispatchCreateAccount = {this.props.actions.dispatchCreateAccount}
+                    dispatchShowLogin = {this.props.actions.dispatchShowLogin}
+                    dispatchShowCreateAccount = {this.props.actions.dispatchShowCreateAccount}
+                    dispatchHideLoginForms = {this.props.actions.dispatchHideLoginForms}
+                    dispatchShowAccountCreationFeedback = {this.props.actions.dispatchShowAccountCreationFeedback}
+                    dispatchCreateUser = {this.props.actions.dispatchCreateUser}
+                    createCognitoUser = {this.props.actions.createCognitoUser}
+                    initAuth0 = {this.props.actions.initAuth0}
+                    saveAuth0Profile = {this.props.actions.saveAuth0Profile}
+                    currentUrl = {this.props.state.currentUrl}
+                    saveAuth0TokenData = {this.props.actions.saveAuth0TokenData}
+                    />
+
+                <AccountCreationFeedback
+                    auth0 = {this.props.state.auth0}
+                    showAccountCreationFeedback = {this.props.state.showAccountCreationFeedback}
+                    dispatchShowAccountCreationFeedback = {this.props.actions.dispatchShowAccountCreationFeedback}
+                    />
+            </div>
+        )
     }
 }
 
@@ -141,12 +175,17 @@ var barStyle = {
 
 var normalLink = {
     textDecoration: 'none',
-    fontSize: '1.5em'
+    fontSize: '1.5em',
+    padding: "0px 10px 0px 10px"
 };
 
 var homeLink = {
-    fontSize: '1.85em'
+    fontSize: '1.85em',
+    paddingRight: "5px",
+    color: '#337Ab7'
 };
 
 
-
+var rightJustify = {
+    marginLeft: "auto"
+}

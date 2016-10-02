@@ -24,7 +24,10 @@ export default function modalDisplay(modalDisplay = {}, action) {
             updatedModalDisplay = Object.assign({}, modalDisplay, { showLogin: false },
                 { showCreateAccount: false });
             return updatedModalDisplay;
-
+        case "SHOW_ACCOUNT_CREATION_FEEDBACK":
+            let showAccountCreationFeedback = !modalDisplay.showAccountCreationFeedback;
+            updatedModalDisplay = Object.assign({}, modalDisplay, { showAccountCreationFeedback: showAccountCreationFeedback });
+            return updatedModalDisplay;
         default:
             return modalDisplay;
     }
